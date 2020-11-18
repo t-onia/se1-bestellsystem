@@ -50,16 +50,41 @@ final class OrderProcessor implements Components.OrderProcessor {
 		return 0;
 	}
 
+	/**
+	 * Calculates and returns the included VAT (by default: 19% of grossValue) in
+	 * the given value.
+	 * 
+	 * @param value including VAT
+	 * @return calculated VAT
+	 */
 	@Override
 	public long vat(long grossValue) {
-		// TODO Auto-generated method stub
-		return 0;
+		float f = (float) grossValue; // vat probably contains decimal points
+		float vat = (f / 119 * 19);
+		long l = (long) Math.round(vat); // use method to round the vat
+		return l; // return rounded long-value
 	}
 
+	/**
+	 * Calculates and returns the included VAT (19% or 7%) in the given value.
+	 * 
+	 * @param value    including VAT
+	 * @param vat-rate (1: 19%, 2: 7%)
+	 * @return calculated VAT
+	 */
 	@Override
 	public long vat(long grossValue, int rateIndex) {
-		// TODO Auto-generated method stub
-		return 0;
+		float f = (float) grossValue;
+		float vat = 0;
+		if (rateIndex == 1) {
+			vat = (f / 119 * 19);
+		} else if (rateIndex == 2) {
+			vat = (f / 119 * 7);
+		} else {
+			System.out.println("There is a problem with the VAT rate.");
+		}
+		long l = (long) Math.round(vat);
+		return l;
 	}
 
 }

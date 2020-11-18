@@ -43,6 +43,7 @@ final class OutputProcessor implements Components.OutputProcessor {
 	public void printOrders(List<Order> orders, boolean printVAT) {
 
 		final int printLineWidth = 95;
+		long totalVAT = 0;
 
 		StringBuffer sbAllOrders = new StringBuffer("-------------");
 		StringBuffer sbLineItem = new StringBuffer();
@@ -52,9 +53,9 @@ final class OutputProcessor implements Components.OutputProcessor {
 
 		for (Order order : orders) {
 			sbAllOrders.append("\n");
-			/* 
-			 * create left side String including number and Info etc, right side String
-			 * with value in EUR
+			/*
+			 * create left side String including number and Info etc, right side String with
+			 * value in EUR
 			 */
 			String left = "#";
 			String right = "";
@@ -63,19 +64,22 @@ final class OutputProcessor implements Components.OutputProcessor {
 			left += String.valueOf(order.getId());
 			left += ", ";
 
-			/* Print customer's name:
-			 * Example left String Variante A: "#5234968294, Eric's Bestellung: "
-			 * Example left String Variante B: "#5234968294, Schulz-Mueller, Eric's Bestellung: "
+			/*
+			 * Print customer's name: Example left String Variante A:
+			 * "#5234968294, Eric's Bestellung: " Example left String Variante B:
+			 * "#5234968294, Schulz-Mueller, Eric's Bestellung: "
 			 */
 			Customer customer = order.getCustomer();
-			
-			String customerNameA = splitName(customer, customer.getFirstName() + " " + customer.getLastName());	// Variante A: "Vorname Nachname"
-			String customerNameB = singleName(customer);	// Variante B: "Nachname, Vorname"
-			
-			
+
+			String customerNameA = splitName(customer, customer.getFirstName() + " " + customer.getLastName()); // Variante
+																												// A:
+																												// "Vorname
+																												// Nachname"
+			String customerNameB = singleName(customer); // Variante B: "Nachname, Vorname"
+
 			// Ausgabevariante B:
 			left += customerNameB;
-			left += "'s Bestellung: "; 	
+			left += "'s Bestellung: ";
 
 			// price as long
 			long oPrice = 000;
@@ -108,12 +112,23 @@ final class OutputProcessor implements Components.OutputProcessor {
 		String totalPrice = pad(fmtPrice(sumOrders, "", " EUR"), 14, true);
 
 		// append final line with totals
-		// TODO:LEERZEICHEN ODER --- ?
 		sbAllOrders.append("\n").append(fmtLine("-------------", "              -------------", printLineWidth))
 				.append("\n").append(fmtLine("Gesamtwert aller Bestellungen:", totalPrice, printLineWidth));
 
 		// print sbAllOrders StringBuffer with all output to System.out
 		System.out.println(sbAllOrders.toString());
+
+		// print total VAT
+		// TODO: change long to other numbertype in method to calculate correct -> double?
+		if (printVAT == true) {
+			totalVAT = orderProcessor.vat(sumOrders);
+			
+			StringBuffer sbTotalVAT = new StringBuffer();
+			String VAT = pad(fmtPrice(totalVAT, "", " EUR"), 14, true);
+
+			sbTotalVAT.append(fmtLine("Im Gesamtbetrag enthaltene Mehrwertsteuer (19%):", VAT, printLineWidth));
+			System.out.println(sbTotalVAT.toString());
+		}
 	}
 
 	@Override
@@ -204,13 +219,13 @@ final class OutputProcessor implements Components.OutputProcessor {
 	}
 
 	/**
-	* Split single‐String name to first‐ and last name and set to the customer
-	* object, e.g. single‐String "Eric Meyer" is split into "Eric" and "Meyer".
-	*
-	* @param customer object for which first‐ and lastName are set
-	* @param name single‐String name that is split into first‐ and last name
-	* @return returns single‐String name extracted from customer object
-	*/
+	 * Split single‐String name to first‐ and last name and set to the customer
+	 * object, e.g. single‐String "Eric Meyer" is split into "Eric" and "Meyer".
+	 *
+	 * @param customer object for which first‐ and lastName are set
+	 * @param name     single‐String name that is split into first‐ and last name
+	 * @return returns single‐String name extracted from customer object
+	 */
 	@Override
 	public String splitName(Customer customer, String name) {
 		if (name.split("\\w+").length > 1) {
@@ -228,12 +243,12 @@ final class OutputProcessor implements Components.OutputProcessor {
 	}
 
 	/**
-	* Returns single‐String name obtained from first‐ and lastName attributes of
-	* Customer object, e.g. "Eric", "Meyer" returns single‐String "Meyer, Eric".
-	*
-	* @param customer object referred to
-	* @return sanitized name derived from first‐ and lastName attributes
-	*/
+	 * Returns single‐String name obtained from first‐ and lastName attributes of
+	 * Customer object, e.g. "Eric", "Meyer" returns single‐String "Meyer, Eric".
+	 *
+	 * @param customer object referred to
+	 * @return sanitized name derived from first‐ and lastName attributes
+	 */
 	@Override
 	public String singleName(Customer customer) {
 		if (customer.getFirstName().equals("") == true) {

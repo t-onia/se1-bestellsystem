@@ -75,7 +75,12 @@ public class Application_2 {
 			);
 
 			List<Order> orders = new ArrayList<Order>(List.of(o5234, o8592, o3563, o6135, o4835, o6399));
-			outputProcessor.printOrders(orders, false); // Ausgabe aller Bestellungen über den OutputProcessor
+			/*
+			 * Ausgabe aller Bestellungen über die Methode des OutputProcessors
+			 * false: Ausgabe ohne MwSt.
+			 * true: Ausgabe mit MwSt.
+			 */
+			outputProcessor.printOrders(orders, true);
 		
 		/*
 		 * catch potential NullPointerException	

@@ -9,7 +9,6 @@ public final class ComponentFactory {
 	private OrderProcessor orderProcessor;
 	private OutputProcessor outputProcessor;
 	private DataFactory dataFactory;
-	private RawDataFactory rawDataFactory;
 
 	/**
 	 * Private constructor.
