@@ -11,16 +11,10 @@ public class Customer {
 	 * Instanzen der Klasse sollen nur durch die DataFactory erzeugt werden können,
 	 * also ist der Konstruktor protected
 	 */
-	protected Customer(String id, String name, String contact) {
-		// Spezialfall: NullArgumentConstructor, siehe CustomerTest
-		if ((id == null) && (name == null) && (contact == null)) {
-			this.id = null; // id ist null, die anderen Werte sind ""
-			// Normalfall
-		} else {
-			this.id = id;
-			this.contact = contact;
-			this.lastName = name;
-		}
+	protected Customer(String id, String name, String contact) {	
+			this.id = id;	// id kann null sein
+			setContact(contact);
+			setLastName(name);
 	}
 
 	/*
@@ -37,7 +31,7 @@ public class Customer {
 	}
 
 	public void setFirstName(String firstName) {
-		if (firstName == null) {
+		if (firstName == null) {	// firstName darf nicht null sein
 			this.firstName = "";
 		} else {
 			this.firstName = firstName;
@@ -49,7 +43,7 @@ public class Customer {
 	}
 
 	public void setLastName(String lastName) {
-		if (lastName == null) {
+		if (lastName == null) {	// lastName darf nicht null sein
 			this.lastName = "";
 		} else {
 			this.lastName = lastName;
@@ -61,7 +55,7 @@ public class Customer {
 	}
 
 	public void setContact(String contact) {
-		if (contact == null) {
+		if (contact == null) {	// contact darf nicht null sein
 			this.contact = "";
 		} else {
 			this.contact = contact;
